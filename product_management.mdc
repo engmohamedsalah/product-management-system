@@ -1,0 +1,113 @@
+# Product Management System - Cursor Rules
+
+## Project Specifications
+- Name: Product Management System
+- Type: Full-stack mobile application
+- Mobile: Apache Cordova
+- Backend: ASP.NET Framework 4.8 Web API
+- Features: CRUD operations, barcode scanning, offline capability
+
+## Directory Structure
+```
+/
+├── mobile-app/
+│   ├── www/
+│   ├── plugins/
+│   └── config.xml
+├── backend-api/
+│   ├── Controllers/
+│   ├── Models/
+│   ├── Services/
+│   └── App_Data/
+└── docs/
+```
+
+## File Patterns
+
+### Mobile App (Cordova)
+- HTML files: `mobile-app/www/**/*.html`
+- CSS files: `mobile-app/www/**/*.css`
+- JavaScript files: `mobile-app/www/**/*.js`
+- Config file: `mobile-app/config.xml`
+
+### Backend API (.NET)
+- Controllers: `backend-api/Controllers/**/*.cs`
+- Models: `backend-api/Models/**/*.cs`
+- Services: `backend-api/Services/**/*.cs`
+- Config files: `backend-api/*.config`
+
+## Required Technologies
+
+### Mobile Application
+- Apache Cordova
+- HTML/CSS/JavaScript
+- SQLite
+- Cordova Barcode Scanner Plugin
+- Cordova SQLite Plugin
+
+### Backend API
+- ASP.NET Framework 4.8
+- Entity Framework
+- SQL Server database
+- JWT authentication
+- Swagger
+
+## Code Standards
+
+### JavaScript (Mobile)
+- Use ES6+ features
+- Follow camelCase naming convention
+- Document functions with JSDoc comments
+- Implement proper error handling for API calls and device functionality
+
+### C# (Backend)
+- Follow Microsoft C# coding conventions
+- Use PascalCase for class names and public members
+- Use camelCase for local variables and parameters
+- Implement proper exception handling
+- Document public APIs with XML comments
+
+## API Endpoints
+
+### Products API
+- GET `/api/products` - Get all products
+- GET `/api/products/{id}` - Get specific product
+- POST `/api/products` - Create new product
+- PUT `/api/products/{id}` - Update product
+- DELETE `/api/products/{id}` - Delete product
+
+### Authentication API
+- POST `/api/auth/token` - Get authentication token
+
+## Database Models
+
+### Product
+- Id: int
+- Name: string
+- Price: decimal
+- Barcode: string
+- Description: string (optional)
+- CreatedAt: DateTime
+- UpdatedAt: DateTime
+
+## Mobile App Screens
+- Login Screen
+- Product List Screen
+- Product Detail Screen
+- Product Edit/Create Screen
+- Barcode Scanner Screen
+- Settings Screen
+
+## Performance Guidelines
+- Optimize API calls to minimize data transfer
+- Implement proper caching strategies for offline functionality
+- Minimize DOM manipulations in mobile UI
+- Use async/await pattern for asynchronous operations
+- Implement connection status monitoring for sync operations
+
+## Security Requirements
+- Implement JWT token-based authentication
+- Enforce HTTPS for all API communication
+- Implement proper data validation on both client and server
+- Follow secure storage practices for sensitive data
+- Implement proper error handling to prevent information exposure 

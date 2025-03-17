@@ -1,0 +1,57 @@
+{
+  "name": "product-management-app",
+  "version": "1.0.0",
+  "description": "Mobile application for product management with barcode scanning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "cordova prepare",
+    "build": "cordova build",
+    "build:android": "cordova build android",
+    "build:ios": "cordova build ios",
+    "emulate:android": "cordova emulate android",
+    "emulate:ios": "cordova emulate ios",
+    "device:android": "cordova run android",
+    "device:ios": "cordova run ios"
+  },
+  "keywords": [
+    "cordova",
+    "product",
+    "management",
+    "barcode",
+    "scanner"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "cordova": "^11.0.0",
+    "cordova-android": "^10.1.2",
+    "cordova-ios": "^6.2.0",
+    "cordova-plugin-device": "^2.1.0",
+    "cordova-plugin-network-information": "^3.0.0",
+    "cordova-plugin-splashscreen": "^6.0.0",
+    "cordova-plugin-statusbar": "^3.0.0",
+    "cordova-sqlite-storage": "^6.0.0",
+    "phonegap-plugin-barcodescanner": "^8.1.0"
+  },
+  "cordova": {
+    "platforms": [
+      "android",
+      "ios",
+      "browser"
+    ],
+    "plugins": {
+      "cordova-plugin-device": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-sqlite-storage": {},
+      "phonegap-plugin-barcodescanner": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
+    }
+  },
+  "devDependencies": {
+    "cordova-browser": "^7.0.0"
+  }
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner | Product Management System</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome from CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="index.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1>Scan Barcode</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="app-content">
+            <div class="container">
+                <div class="scanner-container text-center">
+                    <div id="scanner-placeholder" class="scanner-placeholder">
+                        <div class="scanner-frame">
+                            <div class="scanner-reticle"></div>
+                        </div>
+                        <p class="scanner-instructions">Position the barcode within the frame to scan</p>
+                    </div>
+
+                    <div id="scanning-overlay" class="scanning-overlay hidden">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Scanning...</span>
+                        </div>
+                        <p>Scanning...</p>
+                    </div>
+
+                    <div id="scan-result" class="scan-result hidden">
+                        <div class="alert" role="alert"></div>
+                    </div>
+
+                    <div class="scanner-controls">
+                        <button id="scan-btn" class="btn btn-primary btn-lg">
+                            <i class="fas fa-barcode"></i> Scan Barcode
+                        </button>
+                        <button id="manual-entry-btn" class="btn btn-secondary">
+                            <i class="fas fa-keyboard"></i> Manual Entry
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manual entry form -->
+                <div id="manual-entry-form" class="manual-entry-form hidden">
+                    <div class="card">
+                        <div class="card-header">
+                            Manual Barcode Entry
+                        </div>
+                        <div class="card-body">
+                            <form id="barcode-form">
+                                <div class="form-group">
+                                    <label for="barcode-input">Barcode</label>
+                                    <input type="text" class="form-control" id="barcode-input" 
+                                        placeholder="Enter barcode number" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Search</button>
+                                <button type="button" id="cancel-manual-entry" class="btn btn-secondary">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="container">
+                <p>&copy; 2023 Product Management System</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Cordova -->
+    <script src="cordova.js"></script>
+    
+    <!-- Application scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/sync.js"></script>
+    <script>
+        document.addEventListener('deviceready', function() {
+            // DOM Elements
+            const scanBtn = document.getElementById('scan-btn');
+            const manualEntryBtn = document.getElementById('manual-entry-btn');
+            const manualEntryForm = document.getElementById('manual-entry-form');
+            const barcodeForm = document.getElementById('barcode-form');
+            const cancelManualEntryBtn = document.getElementById('cancel-manual-entry');
+            const scanningOverlay = document.getElementById('scanning-overlay');
+            const scanResult = document.getElementById('scan-result');
+            const scannerPlaceholder = document.getElementById('scanner-placeholder');
+
+            // Initialize services
+            Api.init();
+            Database.init();
+
+            // Scan button click handler
+            scanBtn.addEventListener('click', async function() {
+                try {
+                    // Show scanning overlay
+                    scanningOverlay.classList.remove('hidden');
+                    scannerPlaceholder.classList.add('hidden');
+                    scanResult.classList.add('hidden');
+
+                    // Perform scan and lookup
+                    const result = await Scanner.scanAndFindProduct();
+
+                    // Handle cancelled scan
+                    if (result.cancelled) {
+                        scanningOverlay.classList.add('hidden');
+                        scannerPlaceholder.classList.remove('hidden');
+                        return;
+                    }
+
+                    // Show result briefly
+                    scanningOverlay.classList.add('hidden');
+                    scanResult.classList.remove('hidden');
+                    
+                    const alertEl = scanResult.querySelector('.alert');
+                    
+                    if (result.product) {
+                        // Product found
+                        alertEl.classList.add('alert-success');
+                        alertEl.classList.remove('alert-danger');
+                        alertEl.innerHTML = `
+                            <strong>Found:</strong> ${result.product.name}<br>
+                            <small>Redirecting to product details...</small>
+                        `;
+                        
+                        // Redirect to product details page
+                        setTimeout(() => {
+                            window.location.href = `product-details.html?barcode=${result.product.barcode}`;
+                        }, 1500);
+                    } else {
+                        // Product not found
+                        alertEl.classList.add('alert-danger');
+                        alertEl.classList.remove('alert-success');
+                        alertEl.innerHTML = `
+                            <strong>Not Found:</strong> ${result.barcode}<br>
+                            <small>Redirecting to add new product...</small>
+                        `;
+                        
+                        // Redirect to add product page
+                        setTimeout(() => {
+                            window.location.href = `product-details.html?barcode=${result.barcode}`;
+                        }, 1500);
+                    }
+                } catch (error) {
+                    console.error('Scan error:', error);
+                    
+                    // Show error
+                    scanningOverlay.classList.add('hidden');
+                    scanResult.classList.remove('hidden');
+                    
+                    const alertEl = scanResult.querySelector('.alert');
+                    alertEl.classList.add('alert-danger');
+                    alertEl.classList.remove('alert-success');
+                    alertEl.innerHTML = `
+                        <strong>Error:</strong> ${error.message || 'Failed to scan barcode'}<br>
+                        <small>Please try again.</small>
+                    `;
+                    
+                    // Show scanner placeholder after delay
+                    setTimeout(() => {
+                        scanResult.classList.add('hidden');
+                        scannerPlaceholder.classList.remove('hidden');
+                    }, 3000);
+                }
+            });
+
+            // Manual entry button click handler
+            manualEntryBtn.addEventListener('click', function() {
+                scannerPlaceholder.classList.add('hidden');
+                scanResult.classList.add('hidden');
+                manualEntryForm.classList.remove('hidden');
+                document.getElementById('barcode-input').focus();
+            });
+
+            // Cancel manual entry button click handler
+            cancelManualEntryBtn.addEventListener('click', function() {
+                manualEntryForm.classList.add('hidden');
+                scannerPlaceholder.classList.remove('hidden');
+            });
+
+            // Manual entry form submit handler
+            barcodeForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const barcodeInput = document.getElementById('barcode-input');
+                const barcode = barcodeInput.value.trim();
+                
+                if (!barcode) {
+                    return;
+                }
+                
+                // Redirect to product details with barcode parameter
+                window.location.href = `product-details.html?barcode=${barcode}`;
+            });
+        }, false);
+    </script>
+</body>
+</html> 

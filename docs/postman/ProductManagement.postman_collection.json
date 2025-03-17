@@ -1,0 +1,394 @@
+{
+	"info": {
+		"_postman_id": "7e8b2f3c-5a92-4a1b-9d57-f8c10e5c3a2e",
+		"name": "Product Management API",
+		"description": "Collection for testing the Product Management API endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"    pm.test(\"Token received and stored\", function() {",
+									"        pm.expect(jsonData.token).to.be.a('string');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/api/auth/login",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login to the API and retrieve a JWT token"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"if (jsonData.token) {",
+									"    pm.environment.set(\"auth_token\", jsonData.token);",
+									"    pm.test(\"Token refreshed and stored\", function() {",
+									"        pm.expect(jsonData.token).to.be.a('string');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/api/auth/refresh",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Refresh the JWT token using a refresh token"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for authentication"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/api/products",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Retrieve a list of all products"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/api/products/1",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"1"
+							]
+						},
+						"description": "Retrieve a specific product by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by Barcode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/api/products/barcode/9781234567890",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"barcode",
+								"9781234567890"
+							]
+						},
+						"description": "Retrieve a product by its barcode"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"New Test Product\",\n    \"price\": 29.99,\n    \"barcode\": \"9780987654321\",\n    \"description\": \"This is a test product created via Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/api/products",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Create a new product"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Test Product\",\n    \"price\": 39.99,\n    \"barcode\": \"9780987654321\",\n    \"description\": \"This product has been updated via Postman\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/api/products/11",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							]
+						},
+						"description": "Update an existing product by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/api/products/11",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							]
+						},
+						"description": "Delete a product by its ID"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for product management"
+		},
+		{
+			"name": "Sync",
+			"item": [
+				{
+					"name": "Sync Modified Products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"modifiedProducts\": [\n        {\n            \"id\": 1,\n            \"name\": \"Modified Product 1\",\n            \"price\": 19.99,\n            \"barcode\": \"9781234567890\",\n            \"description\": \"This product was modified offline\",\n            \"updatedAt\": \"2023-10-20T14:30:00Z\"\n        },\n        {\n            \"id\": null,\n            \"name\": \"New Offline Product\",\n            \"price\": 29.99,\n            \"barcode\": \"9789876543210\",\n            \"description\": \"This product was created offline\",\n            \"updatedAt\": \"2023-10-20T15:15:00Z\"\n        }\n    ],\n    \"lastSyncTimestamp\": \"2023-10-20T12:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/api/products/sync",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"sync"
+							]
+						},
+						"description": "Synchronize products modified offline with the server"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Updated Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/api/products/updates?since=2023-10-20T12:00:00Z",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"updates"
+							],
+							"query": [
+								{
+									"key": "since",
+									"value": "2023-10-20T12:00:00Z"
+								}
+							]
+						},
+						"description": "Get products updated since a specific timestamp"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints for synchronization of offline changes"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_url",
+			"value": "http://localhost:44320",
+			"type": "string"
+		}
+	]
+} 
