@@ -1,115 +1,197 @@
 # Product Management System
 
-This repository contains the Product Management System, which consists of:
+A comprehensive product management solution featuring a mobile-friendly web application with offline capabilities and multiple backend options.
 
-## Project Structure
+## 🌟 Features
 
-- **mobile-app/**: Cordova-based mobile application
-  - **www/**: Web assets for the mobile app
-  - **mock-server/**: Express.js-based mock server for development and testing
+- **📱 Cross-Platform Mobile Interface**: Built with Cordova for maximum compatibility
+- **🔄 Offline-First Architecture**: Full functionality without constant internet connection
+- **📊 Real-Time Sync**: Automatic data synchronization when online
+- **📷 Barcode Scanner Integration**: Quick product lookup and entry
+- **🔒 Secure Authentication**: JWT-based user authentication
+- **📱 Responsive Design**: Works seamlessly on mobile and desktop
+- **🔄 Multiple Backend Options**: Choose between Express.js mock server or .NET backend
 
-- **backend-api/**: .NET-based backend API (production backend)
+## 🛠️ Tech Stack
 
-## Backend Options
+- **Frontend**: HTML5, CSS3, JavaScript, Cordova
+- **Mobile Framework**: Apache Cordova
+- **Development Backend**: Node.js, Express.js
+- **Production Backend**: ASP.NET Framework
+- **Database**: 
+  - Development: JSON file-based storage
+  - Production: SQL Server
+- **Authentication**: JWT (JSON Web Tokens)
 
-The system supports two backend options:
+## 📋 Prerequisites
 
-1. **Mock Server (Express.js)**: Located in `mobile-app/mock-server/`
-   - For development and testing purposes
-   - Simple to set up and run
-   - Provides basic API functionality with Swagger documentation
+- **Node.js**: v14.0.0 or higher
+- **npm**: v6.0.0 or higher
+- **Apache Cordova**: Latest version
+- For Production Backend:
+  - Visual Studio 2019 or higher
+  - .NET Framework 4.8
+  - SQL Server (Express or higher)
 
-2. **Production Backend (.NET)**: Located in `backend-api/`
-   - Full-featured .NET implementation
-   - Robust database integration
-   - Production-ready API
+## 🚀 Quick Start
 
-## Getting Started
-
-### Running the Mock Server
+### 1. Clone the Repository
 
 ```bash
+git clone <repository-url>
+cd product-management
+```
+
+### 2. Development Setup (Mock Server)
+
+```bash
+# Install mock server dependencies
 cd mobile-app/mock-server
-./start-server.sh
-```
+npm install
+cp .env.example .env  # Configure environment variables
 
-The mock server will run on http://localhost:3000 by default.
+# Install mobile app dependencies
+cd ../
+npm install
 
-### Running the Mobile App
-
-```bash
-cd mobile-app
-cordova run browser
-```
-
-The mobile app will connect to the backend specified in `mobile-app/www/js/config.js`.
-
-### Running Both Together (Development)
-
-For convenience, you can use the provided script to run both the mock server and mobile app:
-
-```bash
+# Start both mock server and mobile app
+cd ..
 ./start-dev-environment.sh
 ```
 
-### Running the .NET Backend
+### 3. Production Setup (.NET Backend)
 
-Open the `backend-api/ProductManagement.sln` file in Visual Studio and run the project.
-The .NET backend will run on http://localhost:44320 by default.
+```bash
+# Open in Visual Studio
+cd backend-api
+start ProductManagement.sln
 
-## Switching Between Backends
-
-To switch between the mock server and the .NET backend, modify the `baseUrl` property in `mobile-app/www/js/config.js`:
-
-```javascript
-// For mock server:
-baseUrl: 'http://localhost:3000'
-
-// For .NET backend:
-baseUrl: 'http://localhost:44320'
+# Update connection string in Web.config
+# Build and run the solution
 ```
 
-## Features
+## 🔧 Configuration
 
-- **Product Management**: Add, edit, view, and delete products
-- **Barcode Scanning**: Scan product barcodes to quickly find or add products
-- **Offline Support**: Full functionality even without an internet connection
-- **Synchronization**: Automatically syncs data with the backend when online
-- **Responsive UI**: Works on mobile and desktop devices
+### Mobile App Configuration
+File: `mobile-app/www/js/config.js`
+```javascript
+const AppConfig = {
+    api: {
+        baseUrl: 'http://localhost:3000', // Mock server
+        // baseUrl: 'http://localhost:44320', // .NET backend
+        timeout: 30000
+    }
+    // ... other configurations
+};
+```
 
-## System Architecture
+### Mock Server Configuration
+File: `mobile-app/mock-server/.env`
+```env
+PORT=3000
+JWT_SECRET=your-secret-key
+ALLOW_ORIGIN=http://localhost:8000
+```
 
-The system consists of two main components:
+## 📱 Mobile App Features
 
-1. **Mobile Application (Cordova)**
-   - Frontend user interface
-   - Local database for offline operation
-   - Synchronization mechanism
+- **Product Management**
+  - Add/Edit/Delete products
+  - Scan barcodes
+  - View product details
+  - Search and filter products
 
-2. **Backend Server (Node.js/Express)**
-   - RESTful API for data access
-   - Authentication and authorization
-   - Data persistence
+- **Offline Capabilities**
+  - Local data storage
+  - Background sync
+  - Conflict resolution
 
-## API Endpoints
+- **User Interface**
+  - Responsive design
+  - Touch-friendly controls
+  - Dark/Light theme support
 
-The backend provides the following REST API endpoints:
+## 🔒 Security Features
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get product by ID
-- `GET /api/products/barcode/:barcode`: Get product by barcode
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
-- `POST /api/auth/login`: Authenticate user and get JWT token
+- JWT-based authentication
+- Secure password hashing
+- CORS protection
+- Input validation
+- XSS protection
 
-## License
+## 📚 API Documentation
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Mock Server Endpoints
 
-## Acknowledgements
+```
+GET    /api/products           - List all products
+GET    /api/products/:id      - Get product details
+POST   /api/products          - Create product
+PUT    /api/products/:id      - Update product
+DELETE /api/products/:id      - Delete product
+POST   /api/auth/login        - User authentication
+```
 
-- [Cordova](https://cordovajs.com/)
-- [Express](https://expressjs.com/)
-- [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)
-- [Bootstrap](https://getbootstrap.com/) 
+### Production Backend Endpoints
+
+```
+GET    /api/products          - List all products
+GET    /api/products/:id      - Get product details
+POST   /api/products          - Create product
+PUT    /api/products/:id      - Update product
+DELETE /api/products/:id      - Delete product
+POST   /api/auth/login        - User authentication
+GET    /api/products/sync     - Sync changes
+```
+
+## 🔄 Sync Process
+
+1. Local changes are stored in IndexedDB
+2. Background sync attempts periodically
+3. Conflicts are resolved using timestamp-based strategy
+4. Failed syncs are retried automatically
+
+## 🧪 Testing
+
+```bash
+# Run mock server tests
+cd mobile-app/mock-server
+npm test
+
+# Run mobile app tests
+cd ../
+npm test
+```
+
+## 📦 Deployment
+
+### Mobile App
+1. Build the Cordova app
+2. Deploy to app stores or as a web app
+
+### Backend API
+1. Configure production settings
+2. Deploy to IIS or cloud service
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Apache Cordova Team
+- Express.js Community
+- .NET Community
+- All contributors
+
+## 📞 Support
+
+For support, please open an issue in the repository or contact the maintainers. 

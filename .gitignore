@@ -15,6 +15,9 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 .vscode/
 
+# Cursor specific
+.cursor/
+
 # Node.js specific
 node_modules/
 npm-debug.log
